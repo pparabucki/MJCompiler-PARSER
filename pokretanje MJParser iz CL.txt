@@ -1,0 +1,1 @@
+java -jar MJParser.jar .\test\program.mj

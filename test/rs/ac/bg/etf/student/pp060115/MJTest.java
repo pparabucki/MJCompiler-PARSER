@@ -10,6 +10,7 @@ import java.io.Reader;
 
 import java_cup.runtime.Symbol;
 
+
 //LEXER GENERATOR -d src\rs\ac\bg\etf\student\pp060115 spec\mjlexer.flex
 
 public class MJTest {

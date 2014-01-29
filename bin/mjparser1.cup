@@ -1,0 +1,172 @@
+package rs.ac.bg.etf.student.pp060115;
+
+// ParserGenerator : javaCupMain
+//-destdir src\rs\ac\bg\etf\student\pp060115 -parser MJParser spec\mjparser.cup
+
+
+import java_cup.runtime.*;
+import java.io.*;
+
+parser code {:
+	
+	boolean errorDetected = false;
+	 
+    // slede redefinisani metodi za prijavu gresaka radi izmene teksta poruke
+     
+    public void report_fatal_error(String message, Object info) throws java.lang.Exception {
+      done_parsing();
+      report_error(message, info);
+    }
+  
+    public void syntax_error(Symbol cur_token) {
+        report_error(" Sintaksna greska", cur_token);
+    }
+  
+    public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
+        report_fatal_error(" Fatalna greska, parsiranje se ne moze nastaviti", cur_token);
+    }
+
+    public void report_error(String message, Object info) {
+    	errorDetected = true;
+       	if (info instanceof Symbol)
+        System.out.println("ERROR " + message + " na liniji " + ((Symbol)info).left ); 
+        
+    }
+:}
+
+
+scan with {:
+	Symbol s = this.getScanner().next_token();
+	if (s != null && s.value != null) 
+		System.out.println(s.toString() + " " + s.value.toString());
+	return s;
+:}
+
+/*KLjUCNE RECI*/
+terminal PROGRAM , PRINT , READ , IF , ELSE , BREAK , CLASS , EXTENDS , NEW , WHILE , DO , VOID , CONST , RETURN;
+
+/*PROMENLjIVE - DATATYPE*/
+terminal String 	IDENT;
+terminal Integer	NUMBER;
+terminal Character  CHARCONST;
+terminal Boolean 	BOOLCONST;
+terminal String 	STRCONST;
+
+/*OPERATERI*/
+terminal PLUS , MINUS , MULT , DEV , PERCENT , EQUALS ;
+terminal EQUEQU , NOTEQU , GREATER , GREEQU , LESS , LESEQU;
+terminal AND , OR;
+terminal INCREM , DECREM;
+terminal SEMICOL , COMMA , PERIOD;
+terminal LPAREN , RPAREN , LBRACE , RBRACE , LSQPAREN , RSQPAREN;
+
+
+
+non terminal Program 							;
+
+non terminal DeclarationList , DeclarationPart	;
+
+non terminal ConstDeclList 	 , ConstDecl 		;
+non terminal CDNextList		 , CDNext			;
+
+non terminal VarDeclList   	 , VarDecl			;
+non terminal NVDList		 , NVDecl			;
+
+non terminal ClassDeclList 	 , ClassDecl		;
+non terminal ClassExtendLs	 , ClassExt			;
+non terminal CLDecLst		 , CLDec			;
+
+non terminal MethodDeclList  , MethodDecl 		;
+non terminal MDL								;
+
+
+non terminal TypeList        , Type				;
+non terminal DataTypeList	 , DataType			;
+
+non terminal FormParsList	 , FormPars			;
+
+non terminal StatementList   , Statement		;
+
+
+// 	Program = "program" ident { ConstDecl | VarDecl | ClassDecl} "{" {MethodDecl} "}" .
+
+Program ::= PROGRAM IDENT DeclarationList LBRACE MethodDeclList RBRACE ;
+
+DeclarationList	::=	  DeclarationList DeclarationPart
+					|
+                    /* epsilon */
+                    ;
+                    
+//  {ConstDecl | VarDecl | ClassDecl }
+
+DeclarationPart ::=   ConstDeclList 
+					| VarDeclList 
+					| ClassDeclList
+					;
+
+// ConstDecl= "const" Type ident "=" ( number | charConst | boolConst | strConst) 
+//				   {"," ident "=" (number | charConst | boolConst | strConst)} ";" 
+
+ConstDeclList 	::=  CONST TypeList IDENT EQUALS DataTypeList CDNextList SEMICOL ;
+			
+TypeList		::= Type;
+
+Type			::= IDENT;
+
+DataTypeList	::= DataType;
+
+DataType		::=   NUMBER
+					| CHARCONST
+					| BOOLCONST
+					| STRCONST
+					; 
+
+CDNextList		::=	  CDNextList COMMA	CDNext
+					| CDNext
+					;
+
+CDNext			::=	 IDENT EQUALS DataTypeList ;
+
+
+VarDeclList		::=   Type NVDList	SEMICOL ;
+
+NVDList			::=   NVDList  COMMA	NVDecl
+					| NVDecl
+					;
+
+NVDecl			::=	  IDENT
+					| IDENT LSQPAREN RSQPAREN
+					;
+					
+// ClassDecl = "class" ident ["extends" ident] "{" { VarDecl | MethodDecl } "}" .
+
+ClassDeclList	::=   CLASS IDENT	LBRACE CLDecLst RBRACE
+					| CLASS IDENT 	ClassExtendLs LBRACE CLDecLst RBRACE
+					;
+					
+CLDecLst			::=	  CLDecLst CLDec
+						|
+	                    /* epsilon */
+	                    ;
+	                    
+CLDec				::=   VarDeclList
+						| MethodDeclList
+						;
+						
+ClassExtendLs		::=   EXTENDS IDENT
+						|
+	                    /* epsilon */
+	                    ; 
+
+MethodDeclList  ::=   MethodDeclList  MethodDecl
+ 					|
+                    /* epsilon */
+                    ;
+
+// MethodDecl = (Type | "void") ident "(" [FormPars] ")" {VarDecl} "{"{Statement} "}"
+
+MethodDecl		::=   MDL IDENT LPAREN FormPars RPAREN VarDeclList LBRACE StatementList RBRACE;
+
+MDL				::=   Type
+					| VOID
+					;

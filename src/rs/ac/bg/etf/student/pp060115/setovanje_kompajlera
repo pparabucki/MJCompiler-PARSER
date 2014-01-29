@@ -1,0 +1,10 @@
+ParserGenerator
+MJCompiler
+java_cup.Main
+-destdir src\rs\ac\bg\etf\student\pp060115 -parser MJParser spec\mjparser.cup
+
+MJParserTes
+tMJCompiler
+rs.ac.bg.etf.student.pp060115.MJParser
+test/program.mj
+

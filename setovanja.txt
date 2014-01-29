@@ -1,0 +1,19 @@
+RUN
+MJCompiler
+rs.etf.pp1.mj.runtime.Run
+test\program.obj
+
+ParserGenerator
+MJCompiler
+java_cup.Main
+-destdir src\rs\ac\bg\etf\student\pp060115 -parser MJParser spec\mjparser.cup
+
+Compile
+MJCompiler
+rs.ac.bg.etf.student.pp060115.MJParser
+test/program.mj test/program.obj
+
+Disasm
+MJCompiler
+rs.etf.pp1.mj.runtime.disasm
+test\program.obj

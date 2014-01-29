@@ -1,0 +1,45 @@
+program Program
+class A {
+int x[],y[];
+}
+const int pi = 3; const int e = 2;
+
+class B extends A{ 	
+	int o;
+	int s;
+	int i;
+	int x[];
+
+	{	void as()int k;{k=5;}
+		int getValue(int a)int b;bool c;{return this.i + a;}
+		int ad()string k; int o; int l;{o=5+50; return o;}
+	}
+}
+class C extends B{
+A theA;
+string a;
+}
+{
+void main() A a; C c; int i; int x[];
+{
+a = new A;
+a.x = new int[5];
+a.y = new int[5];
+c = new C;
+c.theA = a;
+c.x = new int[5];
+x = new int[3];
+
+i=0;
+read(c.i);
+while(i<5) {
+c.x[i]=10;
+read(c.x[i]); 
+read(c.theA); 
+i++;
+
+}
+print(c.getValue(c.theA));
+}
+
+}
